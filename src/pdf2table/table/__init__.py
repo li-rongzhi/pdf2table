@@ -10,6 +10,7 @@ from pdf2table.table.processing.bordered_tables.line import detect_lines
 from pdf2table.table.processing.bordered_tables.tables import get_tables
 from pdf2table.table.processing.bordered_tables.tables.implicit_rows import handle_implicit_rows
 from pdf2table.table.metrics import compute_img_metrics
+from pdf2table.table.processing.borderless_tables import identify_borderless_tables
 from pdf2table.table.structure.models import Line
 
 from .utils import threshold_dark_areas
@@ -55,9 +56,7 @@ class TableImage:
             elif line.vertical:
                 cv2.rectangle(white_img, (line.x1, line.y1 - line.thickness), (line.x2, line.y2 + line.thickness),
                               (255, 255, 255), 2 * line.thickness)
-    # def preprocess(self):
-    #     """Preprocess the image for table detection."""
-    #     self.thresh = preprocess_image(self.img_array)
+        return white_img
 
     def compute_image_metrics(self):
         """Compute metrics such as character length and median line separation."""
@@ -72,8 +71,6 @@ class TableImage:
 
     def extract_bordered_tables(self, implicit_rows: bool):
         """Detect and extract bordered tables."""
-        # detected_tables = detect_tables(self.thresh, self.lines, self.contours, self.char_length)
-        # self.tables.extend(detected_tables)
         # Apply thresholding
         self.thresh = threshold_dark_areas(img=self.grayscale_img, char_length=self.char_length)
 
@@ -86,8 +83,6 @@ class TableImage:
                                         char_length=self.char_length,
                                         min_line_length=min_line_length)
         self.lines = h_lines + v_lines
-
-        # self.white_img()
 
         # Create cells from rows
         cells = get_cells(horizontal_lines=h_lines,
@@ -104,13 +99,19 @@ class TableImage:
             self.tables = handle_implicit_rows(img=self.white_img,
                                                tables=self.tables,
                                                contours=self.contours)
-        for tab in self.tables:
-            print("table")
-            print(tab.nb_rows)
-            print(tab.nb_columns)
 
-        self.tables = [tb for tb in self.tables if tb.nb_rows * tb.nb_columns >= 2]
+        self.tables = [tb for tb in self.tables if tb.nb_rows * tb.nb_columns >= 4]
 
     def extract_borderless_tables(self):
         """Detect and extract borderless tables."""
-        pass
+        if self.median_line_sep is not None:
+            # Extract borderless tables
+            borderless_tbs = identify_borderless_tables(img=self.grayscale_img,
+                                                        char_length=self.char_length,
+                                                        median_line_sep=self.median_line_sep,
+                                                        lines=self.lines,
+                                                        contours=self.contours,
+                                                        existing_tables=self.tables)
+
+            # Add to tables
+            self.tables += [tb for tb in borderless_tbs if tb.nb_rows >= 2 and tb.nb_columns >= 3]

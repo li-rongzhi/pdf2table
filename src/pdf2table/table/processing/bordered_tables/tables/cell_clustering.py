@@ -6,9 +6,6 @@ import polars as pl
 from pdf2table.table.structure.table_object import Cell
 from pdf2table.table.utils import find_components
 
-# from img2table.tables import find_components
-# from img2table.tables.objects.cell import Cell
-
 
 def get_adjacent_cells(cells: List[Cell]) -> List[Set[int]]:
     """

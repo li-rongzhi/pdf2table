@@ -77,10 +77,22 @@ def get_cells_dataframe(horizontal_lines: List[Line], vertical_lines: List[Line]
 
     # Create dataframe from horizontal and vertical rows
     df_h_lines = pl.LazyFrame(data=[line.dict for line in horizontal_lines])
-    df_v_lines = pl.LazyFrame(data=[line.dict for line in vertical_lines])
+    # df_v_lines = pl.LazyFrame(data=[line.dict for line in vertical_lines])
 
     # Identify potential cells bboxes from horizontal rows
     df_bbox = get_potential_cells_from_h_lines(df_h_lines=df_h_lines)
+
+    # collected_df = df_bbox.collect()
+    # # Initialize a list to store the lines
+    # for row in collected_df.rows():
+    #     # Extract the left boundary x position and the vertical extents y1, y2
+    #     x1_bbox = row[1]
+    #     y1_bbox = row[3]
+    #     y2_bbox = row[4]
+    #     x2_bbox = row[2]
+    #     # Create a VerticalLine object and append it to the list
+        # vertical_lines.append(Line(x1=x1_bbox, y1=y1_bbox, x2=x2_bbox, y2=y2_bbox))
+    df_v_lines = pl.LazyFrame(data=[line.dict for line in vertical_lines])
 
     # Cross join with vertical rows
     df_bbox = df_bbox.with_columns(pl.max_horizontal([(pl.col('x2_bbox') - pl.col('x1_bbox')) * 0.025,

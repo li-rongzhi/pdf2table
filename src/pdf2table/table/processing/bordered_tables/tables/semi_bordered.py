@@ -6,9 +6,6 @@ import numpy as np
 from pdf2table.table.structure.models import Line
 from pdf2table.table.structure.table_object import Cell
 
-# from img2table.tables.objects.cell import Cell
-# from img2table.tables.objects.line import Line
-
 
 def add_semi_bordered_cells(cluster: List[Cell], lines: List[Line], char_length: float):
     """
@@ -18,6 +15,8 @@ def add_semi_bordered_cells(cluster: List[Cell], lines: List[Line], char_length:
     :param char_length: average character length
     :return: cluster with add semi-bordered cells
     """
+    if len(cluster) == 0:
+        return list()
     # Compute cluster coordinates
     x_min, x_max = min([c.x1 for c in cluster]), max([c.x2 for c in cluster])
     y_min, y_max = min([c.y1 for c in cluster]), max([c.y2 for c in cluster])
