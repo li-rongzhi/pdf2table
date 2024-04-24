@@ -115,3 +115,22 @@ class PDF:
                 print(f"Page number {num} is out of range or not valid")
 
         return extracted_tables
+
+    def extract_and_crop_tables(self, page_numbers: Optional[List[int]] = None,
+                       implicit_rows: bool = False,
+                       borderless_tables: bool = False,
+                       min_confidence: int = 50) -> Dict[int, TableObject]:
+        if page_numbers is None:
+            page_numbers = range(1, self.length + 1)
+
+        extracted_tables = {}
+        for num in page_numbers:
+            page = self.get_pages([num])[0]
+            if page:
+                print(f"Extracting tables from page {num}")
+                extracted_tables[num] = page.extract_and_crop_tables(implicit_rows=implicit_rows, borderless_tables=borderless_tables,
+                       min_confidence=min_confidence)
+            else:
+                print(f"Page number {num} is out of range or not valid")
+
+        return extracted_tables

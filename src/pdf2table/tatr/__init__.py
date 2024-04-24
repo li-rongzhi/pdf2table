@@ -143,7 +143,12 @@ class TATR:
             for row, row_text in data.items():
                 wr.writerow(row_text)
         # return as Pandas dataframe
-        df = pd.read_csv('output.csv')
+        try:
+            df = pd.read_csv('output.csv')
+        except pd.errors.EmptyDataError:
+            df = pd.DataFrame()  # Create an empty DataFrame
+            print("Warning: No data found in the CSV file")
+        # df = pd.read_csv('output.csv')
         return df, data
 
     def process_table_image(self, images):

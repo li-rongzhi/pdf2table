@@ -3,6 +3,7 @@ import os
 import torch
 from transformers import AutoModelForObjectDetection
 import easyocr
+from PIL import Image as PILImage
 
 from pdf2table.document import PDF
 from pdf2table.document import Image
@@ -29,7 +30,29 @@ class Driver:
         """Determine the file type and invoke the extract_tables method of the appropriate object."""
         filetype = self.check_file_type(filepath)
         if filetype == 'image':
-            file_object = Image(filepath)
+            file_object = Image(path=filepath)
+            table_images = file_object.extract_and_crop_tables(implicit_rows=implicit_rows, borderless_tables=borderless_tables, min_confidence=min_confidence)
+            tables = []
+            for tb in table_images:
+                tables.append(self.tatr.process_table_image([PILImage.fromarray(tb)]))
+            return tables
+        elif filetype == 'pdf':
+            file_object = PDF(filepath)
+            table_images = file_object.extract_and_crop_tables(implicit_rows=implicit_rows, borderless_tables=borderless_tables, min_confidence=min_confidence)
+            tables = {}
+            for page_num, value in table_images.items():
+                tables_in_page = []
+                for tb in value:
+                    tables_in_page.append(self.tatr.process_table_image([PILImage.fromarray(tb)]))
+                tables[page_num] = tables_in_page
+            return tables
+        else:
+            raise ValueError("Unsupported file type")
+
+    def detect_tables(self, filepath, implicit_rows=False, borderless_tables=False, min_confidence=50):
+        filetype = self.check_file_type(filepath)
+        if filetype == 'image':
+            file_object = Image(path=filepath)
         elif filetype == 'pdf':
             file_object = PDF(filepath)
         else:
