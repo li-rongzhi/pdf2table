@@ -1,4 +1,6 @@
 # pdf2table
+[![PyPI](https://img.shields.io/pypi/v/pdf2table.svg)](https://pypi.org/project/pdf2table/)
+![GitHub](https://img.shields.io/github/license/li-rongzhi/pdf2table.svg)
 
 pdf2table is a Python library designed to extract tabular data from PDF files and images efficiently and accurately. It leverages an enhanced algorithm of `img2table` library for table detection and the TATR model from Microsoft's Table Transformer for precise table structure recognition and content extraction.
 
