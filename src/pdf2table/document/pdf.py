@@ -88,7 +88,10 @@ class PDF:
                 print(f"Page number {num} out of range.")
         return pages
 
-    def extract_tables(self, page_numbers: Optional[List[int]] = None) -> Dict[int, TableObject]:
+    def extract_tables(self, page_numbers: Optional[List[int]] = None,
+                       implicit_rows: bool = False,
+                       borderless_tables: bool = False,
+                       min_confidence: int = 50) -> Dict[int, TableObject]:
         """
         Extracts tables from specified pages or all pages if no specific pages are provided.
 
@@ -106,7 +109,8 @@ class PDF:
             page = self.get_pages([num])[0]
             if page:
                 print(f"Extracting tables from page {num}")
-                extracted_tables[num] = page.extract_tables()
+                extracted_tables[num] = page.extract_tables(implicit_rows=implicit_rows, borderless_tables=borderless_tables,
+                       min_confidence=min_confidence)
             else:
                 print(f"Page number {num} is out of range or not valid")
 

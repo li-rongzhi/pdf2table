@@ -25,9 +25,6 @@ def threshold_dark_areas(img: np.ndarray, char_length: Optional[float], method: 
 
         # Get threshold on image and binary image
         blur = cv2.GaussianBlur(img, (3, 3), 0)
-        # print(blur.dtype)
-        # print(blur.shape)
-        # print(thresh_kernel)
         # Threshold original image
         thresh = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, thresh_kernel,
                                        5)

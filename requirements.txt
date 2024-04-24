@@ -1,0 +1,9 @@
+polars[pandas]>=0.20.5
+opencv-contrib-python
+numba
+numpy
+easyocr
+pdf2image
+torch
+transformers
+pandas

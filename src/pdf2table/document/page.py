@@ -46,3 +46,14 @@ class Page:
         """Extract tables from the page."""
         return self.image.extract_tables(implicit_rows=implicit_rows, borderless_tables=borderless_tables,
                                          min_confidence=min_confidence)
+
+    def extract_and_crop_tables(self, implicit_rows: bool = False,
+                                borderless_tables: bool = False,
+                                min_confidence: int = 50,
+                                save_path: str = None) -> List[np.ndarray]:
+        """Extract tables from the image, crop them, and optionally save them to a folder."""
+        # Invoke table extraction process
+        return self.image.extract_and_crop_tables(implicit_rows=implicit_rows,
+                                               borderless_tables=borderless_tables,
+                                               min_confidence=min_confidence,
+                                               save_path=save_path)

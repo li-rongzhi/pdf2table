@@ -8,6 +8,15 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
     install_requires=[
+        'polars[pandas]>=0.20.5',  # Including optional pandas support
+        'opencv-contrib-python',
+        'numba',
+        'numpy',
+        'easyocr',
+        'pdf2image',
+        'torch',
+        'transformers',
+        'pandas'
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
