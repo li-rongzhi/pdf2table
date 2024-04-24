@@ -3,12 +3,12 @@ from setuptools import setup, find_packages
 setup(
     name='pdf2table',
     version='0.1.0',
-    author='rongzhi',
+    author='rngzhi',
     description='pdf2table is a powerful Python tool designed to streamline the extraction of tabular data from PDF documents.',
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
     install_requires=[
-        'polars[pandas]>=0.20.5',  # Including optional pandas support
+        'polars',
         'opencv-contrib-python',
         'numba',
         'numpy',
@@ -16,7 +16,8 @@ setup(
         'pdf2image',
         'torch',
         'transformers',
-        'pandas'
+        'pandas',
+        'pypdf',
     ],
     classifiers=[
         'Programming Language :: Python :: 3',

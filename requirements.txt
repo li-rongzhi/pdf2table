@@ -1,4 +1,4 @@
-polars[pandas]>=0.20.5
+polars
 opencv-contrib-python
 numba
 numpy
@@ -7,4 +7,4 @@ pdf2image
 torch
 transformers
 pandas
-PyPDF2
+pypdf

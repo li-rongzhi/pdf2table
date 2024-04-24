@@ -1,7 +1,7 @@
 import os
 from typing import List, Optional, Dict
 from pdf2image import convert_from_path
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 
 from pdf2table.table.structure import TableObject
 
