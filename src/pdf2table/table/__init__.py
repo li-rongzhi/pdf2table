@@ -5,6 +5,8 @@ import numpy as np
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+import pandas as pd
+
 from pdf2table.table.processing.bordered_tables.cells import get_cells
 from pdf2table.table.processing.bordered_tables.line import detect_lines
 from pdf2table.table.processing.bordered_tables.tables import get_tables
@@ -12,6 +14,7 @@ from pdf2table.table.processing.bordered_tables.tables.implicit_rows import hand
 from pdf2table.table.metrics import compute_img_metrics
 from pdf2table.table.processing.borderless_tables import identify_borderless_tables
 from pdf2table.table.structure.models import Line
+from pdf2table.table.structure.table_object import Table
 
 from .utils import threshold_dark_areas
 
@@ -27,7 +30,7 @@ class TableImage:
     thresh: Optional[np.ndarray] = None
     contours: List[any] = field(default_factory=list)
     lines: List[Line] = field(default_factory=list)
-    tables: List[TableObject] = field(default_factory=list)
+    tables: List[Table] = field(default_factory=list)
     grayscale_img: np.ndarray = field(init=False)
 
     def __post_init__(self):

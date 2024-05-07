@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import csv
 from torchvision import transforms
+from PIL import Image as PILImage
 
 class MaxResize(object):
         def __init__(self, max_size=800):
@@ -151,16 +152,20 @@ class TATR:
         # df = pd.read_csv('output.csv')
         return df, data
 
-    def process_table_image(self, images):
+    def process_table_images(self, images):
         # Adjusted implementation of process_pdf to work with table images
         # Multiple tables processing
         results = []
         for cropped_table in images:
-            image_processed, cells = self.recognize_table(cropped_table)
+            image_processed, cells = self.recognize_table(PILImage.fromarray(cropped_table))
             cell_coordinates = self.get_cell_coordinates_by_row(cells)
             df, data = self.apply_ocr(cell_coordinates, image_processed)
             results.append((image_processed, df, data))
         return results
+
+    def get_tables(self, images):
+        table_list = self.process_table_images(images)
+        return [pd.DataFrame(tb_tuple[2]) for tb_tuple in table_list]
 
     def clear_memory(self):
         # Clear memory if needed

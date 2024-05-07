@@ -32,18 +32,19 @@ class Driver:
         if filetype == 'image':
             file_object = Image(path=filepath)
             table_images = file_object.extract_and_crop_tables(implicit_rows=implicit_rows, borderless_tables=borderless_tables, min_confidence=min_confidence)
-            tables = []
-            for tb in table_images:
-                tables.append(self.tatr.process_table_image([PILImage.fromarray(tb)]))
+            tables = self.tatr.get_tables(table_images)
+            # for tb in table_images:
+            #     tables.append(self.tatr.process_table_image([PILImage.fromarray(tb)]))
             return tables
         elif filetype == 'pdf':
             file_object = PDF(filepath)
             table_images = file_object.extract_and_crop_tables(implicit_rows=implicit_rows, borderless_tables=borderless_tables, min_confidence=min_confidence)
             tables = {}
             for page_num, value in table_images.items():
-                tables_in_page = []
-                for tb in value:
-                    tables_in_page.append(self.tatr.process_table_image([PILImage.fromarray(tb)]))
+                tables_in_page = self.tatr.get_tables(value)
+                # tables_in_page = []
+                # for tb in value:
+                #     tables_in_page.append(self.tatr.get_table_contents(PILImage.fromarray(tb)))
                 tables[page_num] = tables_in_page
             return tables
         else:

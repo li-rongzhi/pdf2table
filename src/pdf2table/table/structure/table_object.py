@@ -2,8 +2,9 @@ from functools import cached_property
 from dataclasses import dataclass
 
 import numpy as np
+import pandas as pd
 from .models import TableCell, BBox
-from typing import Union, List
+from typing import Optional, OrderedDict, Union, List
 from dataclasses import dataclass, field
 import copy
 
@@ -149,21 +150,20 @@ class Row(TableObject):
         return False
 
 
-# # coding: utf-8
-# import typing
-# from collections import OrderedDict
-# from typing import Union, List
+@dataclass
+class ExtractedTable:
+    bbox: BBox
+    title: Optional[str]
+    content: OrderedDict[int, List[TableCell]]
 
-# import numpy as np
-
-# from img2table.tables.objects import TableObject
-# from img2table.tables.objects.cell import Cell
-# from img2table.tables.objects.extraction import ExtractedTable, BBox
-# from img2table.tables.objects.row import Row
-
-# if typing.TYPE_CHECKING:
-#     from img2table.ocr.data import OCRDataframe
-
+    @property
+    def df(self) -> pd.DataFrame:
+        """
+        Create pandas DataFrame representation of the table
+        :return: pandas DataFrame containing table data
+        """
+        values = [[cell.value for cell in row] for k, row in self.content.items()]
+        return pd.DataFrame(values)
 
 class Table(TableObject):
     def __init__(self, rows: Union[Row, List[Row]], borderless: bool = False):
@@ -301,11 +301,11 @@ class Table(TableObject):
 
     #     return self
 
-    # @property
-    # def extracted_table(self) -> ExtractedTable:
-    #     bbox = BBox(x1=self.x1, x2=self.x2, y1=self.y1, y2=self.y2)
-    #     content = OrderedDict({idx: [cell.table_cell for cell in row.items] for idx, row in enumerate(self.items)})
-    #     return ExtractedTable(bbox=bbox, title=self.title, content=content)
+    @property
+    def extracted_table(self) -> ExtractedTable:
+        bbox = BBox(x1=self.x1, x2=self.x2, y1=self.y1, y2=self.y2)
+        content = OrderedDict({idx: [cell.table_cell for cell in row.items] for idx, row in enumerate(self.items)})
+        return ExtractedTable(bbox=bbox, title=self.title, content=content)
 
     def __eq__(self, other) -> bool:
         if isinstance(other, self.__class__):
