@@ -47,7 +47,7 @@ img_tables = img.extract_tables()
 pdf = PDF("sample.jpg")
 pdf_tables = pdf.extract_tables()
 ```
-
+You may refer to [tutorial](samples/tutorial.ipynb) for more details
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 

@@ -111,7 +111,7 @@ class TATR:
         return cell_coordinates
 
 
-    def apply_ocr(self, cell_coordinates, cropped_table):
+    def apply_ocr(self, cell_coordinates, cropped_table, to_csv=False):
         data = dict()
         max_num_columns = 0
         for idx, row in enumerate(cell_coordinates):
@@ -144,11 +144,12 @@ class TATR:
             for row, row_text in data.items():
                 wr.writerow(row_text)
         # return as Pandas dataframe
-        try:
-            df = pd.read_csv('output.csv')
-        except pd.errors.EmptyDataError:
-            df = pd.DataFrame()  # Create an empty DataFrame
-            print("Warning: No data found in the CSV file")
+        if to_csv:
+            try:
+                df = pd.read_csv('output.csv')
+            except pd.errors.EmptyDataError:
+                df = pd.DataFrame()  # Create an empty DataFrame
+                print("Warning: No data found in the CSV file")
         # df = pd.read_csv('output.csv')
         return df, data
 
